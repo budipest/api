@@ -26,13 +26,13 @@ async function addNote(req, res) {
 }
 
 async function removeNote(req, res) {
-    try {
-      res.send({ hey: "hi!" });
-    } catch (e) {
-      console.error(e);
-      res.send("error!");
-    }
+  try {
+    res.send({ hey: "hi!" });
+  } catch (e) {
+    console.error(e);
+    res.send("error!");
   }
+}
 
 module.exports = {
   upvote,

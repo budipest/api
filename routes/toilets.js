@@ -4,7 +4,7 @@ mongoose.connect(process.env.MONGO_URL, { useUnifiedTopology: true });
 
 const toiletSchema = mongoose.Schema({
   id: String,
-  title: String,
+  name: String,
   addDate: String,
   category: String,
   openHours: [Number],
@@ -19,9 +19,9 @@ const toiletSchema = mongoose.Schema({
     longitude: Number,
   },
 
-  // reports: [],
-  notes: [{ addDate: String, text: String, userId: String }],
-  votes: [{ String: Number }],
+  // reports: [{ userId: String, addDate: String, .... }],
+  notes: [{ userId: String, addDate: String, text: String }],
+  votes: [{ userId: String, value: Number }],
 });
 
 const Toilet = mongoose.model("Toilet", toiletSchema);
