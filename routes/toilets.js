@@ -26,9 +26,20 @@ const toiletSchema = mongoose.Schema({
 
 const Toilet = mongoose.model("Toilet", toiletSchema);
 
-async function nearbyToilets(req, res) {
+async function fetchToilets(req, res) {
   try {
-    res.send({ hey: "hi!" });
+    const toilets = await Toilet.find({});
+    res.send({ data: toilets });
+  } catch (e) {
+    console.error(e);
+    res.send("error!");
+  }
+}
+
+async function fetchToilet(req, res) {
+  try {
+    const toilets = await Toilet.findOne({ id: req.params.toiletID });
+    res.send({ data: toilets });
   } catch (e) {
     console.error(e);
     res.send("error!");
@@ -44,17 +55,8 @@ async function addToilet(req, res) {
   }
 }
 
-async function fetchToilet(req, res) {
-  try {
-    res.send({ hey: "hi!" });
-  } catch (e) {
-    console.error(e);
-    res.send("error!");
-  }
-}
-
 module.exports = {
-  nearbyToilets,
-  addToilet,
+  fetchToilets,
   fetchToilet,
+  addToilet,
 };
