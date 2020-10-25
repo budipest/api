@@ -72,6 +72,7 @@ async function addToilet(req, res) {
 
 async function vote(req, res) {
   try {
+    // TODO: implement this endpoint
     res.send({ hey: "hi!" });
   } catch (e) {
     console.error(e);
@@ -81,6 +82,7 @@ async function vote(req, res) {
 
 async function addNote(req, res) {
   try {
+    // TODO: implement this endpoint
     res.send({ hey: "hi!" });
   } catch (e) {
     console.error(e);
@@ -90,6 +92,7 @@ async function addNote(req, res) {
 
 async function removeNote(req, res) {
   try {
+    // TODO: implement this endpoint
     res.send({ hey: "hi!" });
   } catch (e) {
     console.error(e);
