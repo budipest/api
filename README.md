@@ -1,6 +1,6 @@
 # budipest-api
 
-This is an Express API with Node.js and Google App Engine for the Budipest app.
+This is an Express API with Node.js for the Budipest app.
 
 ## What will this service do?
 
