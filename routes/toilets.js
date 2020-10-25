@@ -70,8 +70,38 @@ async function addToilet(req, res) {
   }
 }
 
+async function vote(req, res) {
+  try {
+    res.send({ hey: "hi!" });
+  } catch (e) {
+    console.error(e);
+    res.send("error!");
+  }
+}
+
+async function addNote(req, res) {
+  try {
+    res.send({ hey: "hi!" });
+  } catch (e) {
+    console.error(e);
+    res.send("error!");
+  }
+}
+
+async function removeNote(req, res) {
+  try {
+    res.send({ hey: "hi!" });
+  } catch (e) {
+    console.error(e);
+    res.send("error!");
+  }
+}
+
 module.exports = {
   fetchToilets,
   fetchToilet,
   addToilet,
+  vote,
+  addNote,
+  removeNote,
 };
