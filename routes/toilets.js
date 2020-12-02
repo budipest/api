@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGO_URL, { useUnifiedTopology: true });
+mongoose.connect(process.env.MONGO_URL, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+});
 
 const toiletSchema = mongoose.Schema({
   id: { type: String },
@@ -72,6 +75,43 @@ async function addToilet(req, res) {
 
 async function vote(req, res) {
   try {
+    const toilet = await Toilet.findOne({ _id: req.params.toiletID });
+    const voteUserID = req.params.userID;
+    const voteValue = req.body.vote;
+
+    let voteIndex = -1;
+
+    if (toilet.votes != null) {
+      for (let i = 0; i < toilet.votes.length; i++) {
+        if (toilet.votes[i].userId == voteUserID) {
+          voteIndex = i;
+        }
+      }
+    } else {
+      toilet.votes = [];
+    }
+
+    if (voteIndex == -1 && voteValue != 0) {
+      toilet.votes.push({ userId: voteUserID, value: voteValue });
+    }
+
+    if (voteValue == 0) {
+      toilet.votes.splice(voteIndex, 1);
+    } else if (voteIndex != -1) {
+      toilet.votes[voteIndex].value = voteValue;
+    }
+
+    toilet.save();
+
+    res.send({ toilet });
+  } catch (e) {
+    console.error(e);
+    res.send("error!");
+  }
+}
+
+async function addNote(req, res) {
+  try {
     // TODO: implement this endpoint
     res.send({ hey: "hi!" });
   } catch (e) {
@@ -80,7 +120,7 @@ async function vote(req, res) {
   }
 }
 
-async function addNote(req, res) {
+async function editNote(req, res) {
   try {
     // TODO: implement this endpoint
     res.send({ hey: "hi!" });
@@ -106,5 +146,6 @@ module.exports = {
   addToilet,
   vote,
   addNote,
+  editNote,
   removeNote,
 };
