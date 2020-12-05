@@ -14,7 +14,10 @@ const toiletSchema = mongoose.Schema({
   tags: { BABY_ROOM: Boolean, WHEELCHAIR_ACCESSIBLE: Boolean },
 
   entryMethod: String,
-  price: Number,
+  price: {
+    HUF: Number,
+    EUR: Number,
+  },
   code: String,
 
   location: {
