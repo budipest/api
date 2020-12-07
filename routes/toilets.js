@@ -115,18 +115,38 @@ async function vote(req, res) {
 
 async function addNote(req, res) {
   try {
-    // TODO: implement this endpoint
-    res.send({ hey: "hi!" });
-  } catch (e) {
-    console.error(e);
-    res.send("error!");
-  }
-}
+    const toilet = await Toilet.findOne({ _id: req.params.toiletID });
+    const noteUserID = req.params.userID;
 
-async function editNote(req, res) {
-  try {
-    // TODO: implement this endpoint
-    res.send({ hey: "hi!" });
+    let noteIndex = -1;
+
+    if (toilet.notes != null) {
+      for (let i = 0; i < toilet.notes.length; i++) {
+        if (toilet.notes[i].userId == noteUserID) {
+          noteIndex = i;
+        }
+      }
+    } else {
+      toilet.notes = [];
+    }
+
+    const vote = {
+      userId: noteUserID,
+      text: req.body.note,
+      addDate: new Date().toISOString(),
+    };
+
+    if (noteIndex == -1) {
+      toilet.notes.push(vote);
+    } else {
+      toilet.notes[noteIndex] = vote;
+    }
+
+    toilet.notes.sort((a, b) => (a.addDate < b.addDate) ? 1 : -1)
+
+    toilet.save();
+
+    res.send({ toilet });
   } catch (e) {
     console.error(e);
     res.send("error!");
@@ -135,8 +155,28 @@ async function editNote(req, res) {
 
 async function removeNote(req, res) {
   try {
-    // TODO: implement this endpoint
-    res.send({ hey: "hi!" });
+    const toilet = await Toilet.findOne({ _id: req.params.toiletID });
+    const noteUserID = req.params.userID;
+
+    let noteIndex = -1;
+
+    if (toilet.notes != null) {
+      for (let i = 0; i < toilet.notes.length; i++) {
+        if (toilet.notes[i].userId == noteUserID) {
+          noteIndex = i;
+        }
+      }
+    } else {
+      toilet.notes = [];
+    }
+
+    if (noteIndex != -1) {
+      toilet.notes.splice(noteIndex, 1);
+    }
+
+    toilet.save();
+
+    res.send({ toilet });
   } catch (e) {
     console.error(e);
     res.send("error!");
@@ -149,6 +189,5 @@ module.exports = {
   addToilet,
   vote,
   addNote,
-  editNote,
   removeNote,
 };
