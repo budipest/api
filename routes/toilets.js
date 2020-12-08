@@ -38,7 +38,7 @@ async function fetchToilets(req, res) {
     res.send({ data: toilets });
   } catch (e) {
     console.error(e);
-    res.send("error!");
+    res.status(500).send(e);
   }
 }
 
@@ -48,7 +48,7 @@ async function fetchToilet(req, res) {
     res.send({ toilet });
   } catch (e) {
     console.error(e);
-    res.send("error!");
+    res.status(500).send(e);
   }
 }
 
@@ -72,7 +72,7 @@ async function addToilet(req, res) {
     }
   } catch (e) {
     console.error(e);
-    res.send("error!");
+    res.status(500).send(e);
   }
 }
 
@@ -109,12 +109,16 @@ async function vote(req, res) {
     res.send({ toilet });
   } catch (e) {
     console.error(e);
-    res.send("error!");
+    res.status(500).send(e);
   }
 }
 
 async function addNote(req, res) {
   try {
+    if (req.body.note.length < 3) {
+      res.status(400).send("Note is too short!");
+    }
+
     const toilet = await Toilet.findOne({ _id: req.params.toiletID });
     const noteUserID = req.params.userID;
 
@@ -142,14 +146,14 @@ async function addNote(req, res) {
       toilet.notes[noteIndex] = vote;
     }
 
-    toilet.notes.sort((a, b) => (a.addDate < b.addDate) ? 1 : -1)
+    toilet.notes.sort((a, b) => (a.addDate < b.addDate ? 1 : -1));
 
     toilet.save();
 
     res.send({ toilet });
   } catch (e) {
     console.error(e);
-    res.send("error!");
+    res.status(500).send(e);
   }
 }
 
@@ -179,7 +183,7 @@ async function removeNote(req, res) {
     res.send({ toilet });
   } catch (e) {
     console.error(e);
-    res.send("error!");
+    res.status(500).send(e);
   }
 }
 
