@@ -77,42 +77,40 @@ async function addToilet(req, res) {
 }
 
 async function vote(req, res) {
-  res.status(500).send("terrible error is happening right now...");
+  try {
+    const toilet = await Toilet.findOne({ _id: req.params.toiletID });
+    const voteUserID = req.params.userID;
+    const voteValue = req.body.vote;
 
-  // try {
-  //   const toilet = await Toilet.findOne({ _id: req.params.toiletID });
-  //   const voteUserID = req.params.userID;
-  //   const voteValue = req.body.vote;
+    let voteIndex = -1;
 
-  //   let voteIndex = -1;
+    if (toilet.votes != null) {
+      for (let i = 0; i < toilet.votes.length; i++) {
+        if (toilet.votes[i].userId == voteUserID) {
+          voteIndex = i;
+        }
+      }
+    } else {
+      toilet.votes = [];
+    }
 
-  //   if (toilet.votes != null) {
-  //     for (let i = 0; i < toilet.votes.length; i++) {
-  //       if (toilet.votes[i].userId == voteUserID) {
-  //         voteIndex = i;
-  //       }
-  //     }
-  //   } else {
-  //     toilet.votes = [];
-  //   }
+    if (voteIndex == -1 && voteValue != 0) {
+      toilet.votes.push({ userId: voteUserID, value: voteValue });
+    }
 
-  //   if (voteIndex == -1 && voteValue != 0) {
-  //     toilet.votes.push({ userId: voteUserID, value: voteValue });
-  //   }
+    if (voteValue == 0) {
+      toilet.votes.splice(voteIndex, 1);
+    } else if (voteIndex != -1) {
+      toilet.votes[voteIndex].value = voteValue;
+    }
 
-  //   if (voteValue == 0) {
-  //     toilet.votes.splice(voteIndex, 1);
-  //   } else if (voteIndex != -1) {
-  //     toilet.votes[voteIndex].value = voteValue;
-  //   }
+    toilet.save();
 
-  //   toilet.save();
-
-  //   res.send({ toilet });
-  // } catch (e) {
-  //   console.error(e);
-  //   res.status(500).send(e);
-  // }
+    res.send({ toilet });
+  } catch (e) {
+    console.error(e);
+    res.status(500).send(e);
+  }
 }
 
 async function addNote(req, res) {
