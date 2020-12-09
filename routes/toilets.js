@@ -33,14 +33,13 @@ const toiletSchema = mongoose.Schema({
 const Toilet = mongoose.model("Toilet", toiletSchema);
 
 async function fetchToilets(req, res) {
-  res.status(500).send("terrible error is happening right now...");
-  // try {
-  //   const toilets = await Toilet.find({});
-  //   res.send({ data: toilets });
-  // } catch (e) {
-  //   console.error(e);
-  //   res.status(500).send(e);
-  // }
+  try {
+    const toilets = await Toilet.find({});
+    res.send({ data: toilets });
+  } catch (e) {
+    console.error(e);
+    res.status(500).send(e);
+  }
 }
 
 async function fetchToilet(req, res) {
@@ -78,40 +77,42 @@ async function addToilet(req, res) {
 }
 
 async function vote(req, res) {
-  try {
-    const toilet = await Toilet.findOne({ _id: req.params.toiletID });
-    const voteUserID = req.params.userID;
-    const voteValue = req.body.vote;
+  res.status(500).send("terrible error is happening right now...");
 
-    let voteIndex = -1;
+  // try {
+  //   const toilet = await Toilet.findOne({ _id: req.params.toiletID });
+  //   const voteUserID = req.params.userID;
+  //   const voteValue = req.body.vote;
 
-    if (toilet.votes != null) {
-      for (let i = 0; i < toilet.votes.length; i++) {
-        if (toilet.votes[i].userId == voteUserID) {
-          voteIndex = i;
-        }
-      }
-    } else {
-      toilet.votes = [];
-    }
+  //   let voteIndex = -1;
 
-    if (voteIndex == -1 && voteValue != 0) {
-      toilet.votes.push({ userId: voteUserID, value: voteValue });
-    }
+  //   if (toilet.votes != null) {
+  //     for (let i = 0; i < toilet.votes.length; i++) {
+  //       if (toilet.votes[i].userId == voteUserID) {
+  //         voteIndex = i;
+  //       }
+  //     }
+  //   } else {
+  //     toilet.votes = [];
+  //   }
 
-    if (voteValue == 0) {
-      toilet.votes.splice(voteIndex, 1);
-    } else if (voteIndex != -1) {
-      toilet.votes[voteIndex].value = voteValue;
-    }
+  //   if (voteIndex == -1 && voteValue != 0) {
+  //     toilet.votes.push({ userId: voteUserID, value: voteValue });
+  //   }
 
-    toilet.save();
+  //   if (voteValue == 0) {
+  //     toilet.votes.splice(voteIndex, 1);
+  //   } else if (voteIndex != -1) {
+  //     toilet.votes[voteIndex].value = voteValue;
+  //   }
 
-    res.send({ toilet });
-  } catch (e) {
-    console.error(e);
-    res.status(500).send(e);
-  }
+  //   toilet.save();
+
+  //   res.send({ toilet });
+  // } catch (e) {
+  //   console.error(e);
+  //   res.status(500).send(e);
+  // }
 }
 
 async function addNote(req, res) {
