@@ -33,13 +33,14 @@ const toiletSchema = mongoose.Schema({
 const Toilet = mongoose.model("Toilet", toiletSchema);
 
 async function fetchToilets(req, res) {
-  try {
-    const toilets = await Toilet.find({});
-    res.send({ data: toilets });
-  } catch (e) {
-    console.error(e);
-    res.status(500).send(e);
-  }
+  res.status(500).send("terrible error is happening right now...");
+  // try {
+  //   const toilets = await Toilet.find({});
+  //   res.send({ data: toilets });
+  // } catch (e) {
+  //   console.error(e);
+  //   res.status(500).send(e);
+  // }
 }
 
 async function fetchToilet(req, res) {
