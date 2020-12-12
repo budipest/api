@@ -6,7 +6,8 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 
 const toiletSchema = mongoose.Schema({
-  id: { type: String },
+  id: String,
+  userId: String,
   name: { type: String, required: true },
   addDate: String,
   category: String,
