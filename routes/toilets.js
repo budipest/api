@@ -7,7 +7,7 @@ mongoose.connect(process.env.MONGO_URL, {
 
 const toiletSchema = mongoose.Schema({
   id: String,
-  userId: String,
+  userId: { type: String, default: "BUDIPEST-DEFAULT" },
   name: { type: String, required: true },
   addDate: String,
   category: String,
