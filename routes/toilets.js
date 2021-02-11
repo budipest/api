@@ -56,11 +56,11 @@ async function fetchToilet(req, res) {
 async function addToilet(req, res) {
   try {
     const newToilet = new Toilet(req.body);
-    const error = newToilet.validateSync();
+    const error = await newToilet.validate();
     if (error) {
       throw error;
     } else {
-      Toilet.create(newToilet);
+      await Toilet.create(newToilet);
 
       const toilet = await Toilet.findOne({
         name: req.body.name,

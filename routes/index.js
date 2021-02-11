@@ -7,7 +7,6 @@ const {
   addToilet,
   vote,
   addNote,
-  editNote,
   removeNote,
 } = require("./toilets.js");
 
