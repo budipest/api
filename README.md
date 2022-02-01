@@ -1,5 +1,3 @@
-# THIS REPOSITORY HAS BEEN ARCHIVED. We moved the Budipest-related repositories into a dedicated organisation, and placed the apps into a monorepo. The new GitHub repository can be found here: [https://github.com/budipest/mono](https://github.com/budipest/mono)
-
 # budipest-api
 
 This is an Express API with Node.js for the Budipest app.
