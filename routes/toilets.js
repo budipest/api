@@ -43,6 +43,37 @@ async function fetchToilets(req, res) {
   }
 }
 
+async function fetchToiletsWODetails(req, res) {
+  try {
+    await Toilet.find(
+      {},
+      {
+        _id: 0,
+        location: 1,
+        openHours: 1,
+        category: 1,
+        votes: 1,
+      },
+      (err, result) => {
+        if (!err) {
+          result = result.map((r) => r.toObject());
+          result.forEach((r) => {
+            r.likes = r.votes.filter((v) => v.value === 1).length;
+            r.dislikes = r.votes.filter((v) => v.value === -1).length;
+            delete r.votes;
+          });
+          res.send(result);
+        } else {
+          res.status(500).send(err);
+        }
+      }
+    );
+  } catch (e) {
+    console.error(e);
+    res.status(500).send(e);
+  }
+}
+
 async function fetchToilet(req, res) {
   try {
     const toilet = await Toilet.findOne({ _id: req.params.toiletID });
@@ -190,6 +221,7 @@ async function removeNote(req, res) {
 
 module.exports = {
   fetchToilets,
+  fetchToiletsWODetails,
   fetchToilet,
   addToilet,
   vote,
