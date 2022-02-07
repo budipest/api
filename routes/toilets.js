@@ -7,6 +7,7 @@ mongoose.connect(process.env.MONGO_URL, {
 
 const toiletSchema = mongoose.Schema({
   id: String,
+  isVerified: Boolean,
   userId: { type: String, default: "BUDIPEST-DEFAULT" },
   name: { type: String, required: true },
   addDate: String,
@@ -35,8 +36,39 @@ const Toilet = mongoose.model("Toilet", toiletSchema);
 
 async function fetchToilets(req, res) {
   try {
-    const toilets = await Toilet.find({});
+    const toilets = await Toilet.find({ isVerified: true });
     res.send({ data: toilets });
+  } catch (e) {
+    console.error(e);
+    res.status(500).send(e);
+  }
+}
+
+async function fetchToiletsWODetails(req, res) {
+  try {
+    await Toilet.find(
+      { isVerified: true },
+      {
+        _id: 0,
+        location: 1,
+        openHours: 1,
+        category: 1,
+        votes: 1,
+      },
+      (err, result) => {
+        if (!err) {
+          result = result.map((r) => r.toObject());
+          result.forEach((r) => {
+            r.likes = r.votes.filter((v) => v.value === 1).length;
+            r.dislikes = r.votes.filter((v) => v.value === -1).length;
+            delete r.votes;
+          });
+          res.send(result);
+        } else {
+          res.status(500).send(err);
+        }
+      }
+    );
   } catch (e) {
     console.error(e);
     res.status(500).send(e);
@@ -55,7 +87,7 @@ async function fetchToilet(req, res) {
 
 async function addToilet(req, res) {
   try {
-    const newToilet = new Toilet(req.body);
+    const newToilet = new Toilet({ ...req.body, isVerified: false });
     const error = await newToilet.validate();
     if (error) {
       throw error;
@@ -77,7 +109,7 @@ async function addToilet(req, res) {
   }
 }
 
-async function vote(req, res) {
+async function addVote(req, res) {
   try {
     const toilet = await Toilet.findOne({ _id: req.params.toiletID });
     const voteUserID = req.params.userID;
@@ -190,9 +222,10 @@ async function removeNote(req, res) {
 
 module.exports = {
   fetchToilets,
+  fetchToiletsWODetails,
   fetchToilet,
   addToilet,
-  vote,
+  addVote,
   addNote,
   removeNote,
 };
