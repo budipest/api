@@ -7,7 +7,7 @@ const {
   fetchToiletsWODetails,
   fetchToilet,
   addToilet,
-  vote,
+  addVote,
   addNote,
   removeNote,
 } = require("./toilets.js");
@@ -16,7 +16,7 @@ router.get("/toilets", fetchToilets);
 router.get("/toilets/:toiletID", fetchToilet);
 router.get("/toiletsWODetails", authMiddleware, fetchToiletsWODetails);
 router.post("/toilets", addToilet);
-router.post("/toilets/:toiletID/votes/:userID", vote); // add or modify vote
+router.post("/toilets/:toiletID/votes/:userID", addVote); // add or modify vote
 router.post("/toilets/:toiletID/notes/:userID", addNote); // add or update note
 router.delete("/toilets/:toiletID/notes/:userID", removeNote);
 

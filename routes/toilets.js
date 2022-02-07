@@ -7,6 +7,7 @@ mongoose.connect(process.env.MONGO_URL, {
 
 const toiletSchema = mongoose.Schema({
   id: String,
+  isVerified: Boolean,
   userId: { type: String, default: "BUDIPEST-DEFAULT" },
   name: { type: String, required: true },
   addDate: String,
@@ -35,7 +36,7 @@ const Toilet = mongoose.model("Toilet", toiletSchema);
 
 async function fetchToilets(req, res) {
   try {
-    const toilets = await Toilet.find({});
+    const toilets = await Toilet.find({ isVerified: true });
     res.send({ data: toilets });
   } catch (e) {
     console.error(e);
@@ -46,7 +47,7 @@ async function fetchToilets(req, res) {
 async function fetchToiletsWODetails(req, res) {
   try {
     await Toilet.find(
-      {},
+      { isVerified: true },
       {
         _id: 0,
         location: 1,
@@ -86,7 +87,7 @@ async function fetchToilet(req, res) {
 
 async function addToilet(req, res) {
   try {
-    const newToilet = new Toilet(req.body);
+    const newToilet = new Toilet({ ...req.body, isVerified: false });
     const error = await newToilet.validate();
     if (error) {
       throw error;
@@ -108,7 +109,7 @@ async function addToilet(req, res) {
   }
 }
 
-async function vote(req, res) {
+async function addVote(req, res) {
   try {
     const toilet = await Toilet.findOne({ _id: req.params.toiletID });
     const voteUserID = req.params.userID;
@@ -224,7 +225,7 @@ module.exports = {
   fetchToiletsWODetails,
   fetchToilet,
   addToilet,
-  vote,
+  addVote,
   addNote,
   removeNote,
 };
